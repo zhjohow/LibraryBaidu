@@ -33,6 +33,8 @@ import com.baidu.mapapi.search.poi.PoiCitySearchOption;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
+import com.zhjh.baidulbs.adapter.PoiAdapter;
+import com.zhjh.baidulbs.adapter.PoiSearchAdapter;
 
 import java.util.List;
 
