@@ -1,4 +1,4 @@
-package com.baidu.track.utils;
+package com.zhjh.baidulbs.util;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
