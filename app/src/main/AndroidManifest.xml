@@ -61,8 +61,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
-
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
@@ -71,5 +69,6 @@
             android:name="com.baidu.trace.LBSTraceService"
             android:enabled="true"
             android:process=":remote"/>
+    </application>
 
 </manifest>
