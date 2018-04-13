@@ -1,7 +1,6 @@
 package com.zhjh.baidulbs.service;
 
 import android.util.Log;
-
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
 import com.baidu.trace.model.LocationMode;
@@ -18,6 +17,9 @@ import com.baidu.trace.model.StatusCodes;
  */
 
 public class TraceService {
+
+        private AtomicInteger mSequenceGenerator = new AtomicInteger();
+	
 	/*轨迹服务ID*/
 	public static long serviceId = ;
 
@@ -34,6 +36,16 @@ public class TraceService {
 	public static LBSTraceClient mTraceClient;
 	public static Trace mTrace;
 	private static TraceListener mListener;
+	
+		/**
+	 * 服务是否开启标识
+	 */
+	public static boolean isTraceStarted = false;
+
+	/**
+	 * 采集是否开启标识
+	 */
+	public static boolean isGatherStarted = false;
 
 	/**
 	 * 初始化轨迹客户端
@@ -58,8 +70,8 @@ public class TraceService {
 	/**
 	 * 初始化鹰眼服务
 	 */
-	public static Trace getTrace(String entityName, TraceListener traceListener) {
-		mListener = traceListener;
+	public static Trace getTrace(String entityName) {
+	
 		if (null == mTrace) {
 			synchronized (TraceService.class) {
 				if (null == mTrace) {
@@ -72,20 +84,59 @@ public class TraceService {
 	}
 
 	/**
-	 * 开启鹰眼服务和采集信息
+	 * 开启鹰眼服务
 	 */
-	public static void StartTrace() {
-		mTraceClient.startTrace(mTrace, mOnTraceListener);
-		mTraceClient.startGather(mOnTraceListener);
+	public static void onStartTrace() {
+	    if (mTraceClient != null) {
+	    
+		  mTraceClient.startTrace(mTrace, mOnTraceListener);
+		
+		}
+		
+	}
+	
+	public static void onStartGather() {
+		if (mTraceClient != null) {
+
+	           mTraceClient.startGather(traceListener);
+
+		}
+
+
 	}
 
 	/**
 	 * 关闭采集信息和鹰眼服务
 	 */
-	public static void StopTrace() {
-		mTraceClient.stopGather(mOnTraceListener);
-		mTraceClient.stopTrace(mTrace, mOnTraceListener);
+	public static void clearTrace() {
+		if (mTraceClient != null) {
+		
+		  mTraceClient.stopGather(mOnTraceListener);
+		
+	
+		}
 	}
+	
+	public void stopTrace() {
+
+	        if (isTraceStarted
+				&& isTraceStarted) {
+			// 退出app停止轨迹服务时，不再接收回调，将OnTraceListener置空
+			if (mClient != null) {
+				mClient.setOnTraceListener(null);
+				mClient.stopTrace(mTrace, null);
+				mClient.clear();
+			}
+		} else {
+			if (mClient != null) {
+				mClient.clear();
+			}
+		}
+		isTraceStarted = false;
+		isGatherStarted = false;
+
+	}
+
 
 	/**
 	 * 开启服务的监听
@@ -157,4 +208,26 @@ public class TraceService {
 		
 		}
 	};
+	
+		/**
+	 * 初始化请求公共参数
+	 *
+	 * @param request
+	 */
+	public void initRequest(BaseRequest request) {
+		if (request != null){
+			request.setTag(getTag());
+			request.setServiceId(serviceId);
+		}
+
+	}
+
+	/**
+	 * 获取请求标识
+	 *
+	 * @return
+	 */
+	public int getTag() {
+		return mSequenceGenerator.incrementAndGet();
+	}
 }
